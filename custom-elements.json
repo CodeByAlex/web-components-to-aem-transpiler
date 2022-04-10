@@ -37,6 +37,12 @@
           "kind": "class",
           "description": "",
           "name": "Button",
+          "slots": [
+            {
+              "description": "The default, and only slot for this button element",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -62,8 +68,9 @@
               "kind": "field",
               "name": "onClick",
               "type": {
-                "text": "() => void"
+                "text": "function"
               },
+              "description": "A click handler to be passed only to onClick. DO NOT USE @click on this component",
               "attribute": "onClick"
             },
             {
@@ -97,8 +104,9 @@
             {
               "name": "onClick",
               "type": {
-                "text": "() => void"
+                "text": "function"
               },
+              "description": "A click handler to be passed only to onClick. DO NOT USE @click on this component",
               "fieldName": "onClick"
             }
           ],

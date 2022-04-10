@@ -131,7 +131,7 @@ const generateComponentContentXML = (templateDirectory, componentDirectory, elem
 
 const generateComponentHTMLFile = (templateDirectory, componentDirectory, elementName, elementObj) => {
     const componentHtmlFile = fs.readFileSync(`${templateDirectory}/component/v1/component/component.html`, 'utf8');
-    const attributes = elementObj.attributes;
+    const attributes = elementObj.attributes ? elementObj.attributes : [];
     const slots = elementObj.slots;
 
     fs.writeFileSync(`${componentDirectory}/${elementName}.html`,
@@ -154,7 +154,7 @@ const generateComponentHTMLFile = (templateDirectory, componentDirectory, elemen
 
 const generateCQDialogContentFile = (templateDirectory, componentDirectory, elementName, elementObj) => {
     const componentContentDialogFile = fs.readFileSync(`${templateDirectory}/component/v1/component/_cq_dialog/.content.xml`, 'utf8');
-    const attributes = elementObj.attributes;
+    const attributes = elementObj.attributes ? elementObj.attributes : [];
     mkdirp.sync(`${componentDirectory}/_cq_dialog`);
     fs.writeFileSync(
         `${componentDirectory}/_cq_dialog/.content.xml`,
