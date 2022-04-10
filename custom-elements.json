@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/declaration.d.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./button/button"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/typings.d.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/button/button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Button",
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "ButtonVariant"
+              },
+              "default": "'primary'",
+              "description": "Button variant type that influences the button's style",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "link",
+              "type": {
+                "text": "String"
+              },
+              "default": "''",
+              "description": "Button variant type that influences the button's style",
+              "attribute": "link"
+            },
+            {
+              "kind": "field",
+              "name": "onClick",
+              "type": {
+                "text": "() => void"
+              },
+              "attribute": "onClick"
+            },
+            {
+              "kind": "field",
+              "name": "getButtonHTML"
+            },
+            {
+              "kind": "field",
+              "name": "getATagHTML"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "ButtonVariant"
+              },
+              "default": "'primary'",
+              "description": "Button variant type that influences the button's style",
+              "fieldName": "variant"
+            },
+            {
+              "name": "link",
+              "type": {
+                "text": "String"
+              },
+              "default": "''",
+              "description": "Button variant type that influences the button's style",
+              "fieldName": "link"
+            },
+            {
+              "name": "onClick",
+              "type": {
+                "text": "() => void"
+              },
+              "fieldName": "onClick"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "example-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Button",
+          "declaration": {
+            "name": "Button",
+            "module": "src/button/button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "example-button",
+          "declaration": {
+            "name": "Button",
+            "module": "src/button/button.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
