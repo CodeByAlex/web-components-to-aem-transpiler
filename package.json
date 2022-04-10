@@ -1,13 +1,13 @@
 {
   "name": "wc-to-aem",
   "version": "0.0.1",
-  "description": "",
+  "description": "CLI to Transpile Web Components to Aem components",
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
     "start": "node index.js custom-elements.json"
   },
-  "author": "",
+  "author": "Alex Wilson",
   "license": "ISC",
   "dependencies": {
     "inquirer": "^6.5.0",
