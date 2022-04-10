@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js custom-elements.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "inquirer": "^6.5.0",
     "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
+    "xml-formatter": "^2.6.1"
   }
 }
