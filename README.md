@@ -11,6 +11,4 @@ npm start
 ```
 and follow the command prompt
 
-This project is an enhanced version of [webcomponent-to-aemcomponent](https://github.com/dirkstals/webcomponent-to-aemcomponent)
-
-Original credit goes to [dirkstals](https://github.com/dirkstals/webcomponent-to-aemcomponent/commits?author=dirkstals)
+This project was inspired by [webcomponent-to-aemcomponent](https://github.com/dirkstals/webcomponent-to-aemcomponent)
