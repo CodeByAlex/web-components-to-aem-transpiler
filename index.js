@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const fs = require('fs');
 const { resolve } = require('path');
 const mkdirp = require('mkdirp');
@@ -49,40 +50,44 @@ if (!customElementsConfig || !customElementsConfig.modules) {
 } else {
     elementClassDefs = getCustomElementClassDefinitions(customElementsConfig);
 }
+
 inquirer.prompt({
     type: 'list',
     name: 'elementName',
-    message: 'Chose a custom element to transpile to an AEM component:',
-    choices: elementClassDefs
+    message: 'Choose a custom element to transpile to an AEM component:',
+    choices: ['All',...elementClassDefs]
 }).then(async ({ elementName }) => {
     inquirer.prompt(questionSetThree).then(async ({ group, versioned, projectName }) => {
         if (!customElementsConfig || !customElementsConfig.modules) {
             console.log(`No custom elements found.`);
         } else {
-            const customElementObject = getCustomElementObject(customElementsConfig, elementName);
             try {
-                console.log(`Creating ${elementName} AEM Component.`);
-                const rootDirectory = getRootComponentDirPath(projectName, elementName);
-                mkdirp.sync(rootDirectory);
-                const contentFile = fs.readFileSync(`${templateDirectory}/.content.xml`, 'utf8');
-                fs.writeFileSync(`${rootDirectory}/.content.xml`, contentFile);
-                let componentDirectory = `${rootDirectory}/${elementName}`;
-                mkdirp.sync(componentDirectory);
-
-                if (versioned) {
-                    fs.writeFileSync(`${componentDirectory}/.content.xml`, versionedComponentContentFile);
-                    mkdirp.sync(`${componentDirectory}/v1`);
-                    fs.writeFileSync(`${componentDirectory}/v1/.content.xml`,
-                        versionedContentFile.replace(/\{component\}/g, elementName)
-                    );
-
-                    componentDirectory = `${rootDirectory}/${elementName}/v1/${elementName}`;
+                const elements = elementName === 'All' ? elementClassDefs : [elementName];
+                for(const element of elements) {
+                    console.log(`Creating ${element} AEM Component.`);
+                    const rootDirectory = getRootComponentDirPath(projectName, element);
+                    mkdirp.sync(rootDirectory);
+                    const contentFile = fs.readFileSync(`${templateDirectory}/.content.xml`, 'utf8');
+                    fs.writeFileSync(`${rootDirectory}/.content.xml`, contentFile);
+                    let componentDirectory = `${rootDirectory}/${element}`;
                     mkdirp.sync(componentDirectory);
+    
+                    if (versioned) {
+                        fs.writeFileSync(`${componentDirectory}/.content.xml`, versionedComponentContentFile);
+                        mkdirp.sync(`${componentDirectory}/v1`);
+                        fs.writeFileSync(`${componentDirectory}/v1/.content.xml`,
+                            versionedContentFile.replace(/\{component\}/g, element)
+                        );
+    
+                        componentDirectory = `${rootDirectory}/${element}/v1/${element}`;
+                        mkdirp.sync(componentDirectory);
+                    }
+    
+                    const customElementObject = getCustomElementObject(customElementsConfig, element);
+                    generateComponentContentXML(templateDirectory, componentDirectory, element, group);
+                    generateComponentHTMLFile(templateDirectory, componentDirectory, element, customElementObject);
+                    generateCQDialogContentFile(templateDirectory, componentDirectory, element, customElementObject);
                 }
-
-                generateComponentContentXML(templateDirectory, componentDirectory, elementName, group);
-                generateComponentHTMLFile(templateDirectory, componentDirectory, elementName, customElementObject);
-                generateCQDialogContentFile(templateDirectory, componentDirectory, elementName, customElementObject);
             } catch (e) {
                 console.log(e);
             }
@@ -117,9 +122,7 @@ const isAttributeTypeFunction = (attr) => {
 }
 
 const generateComponentContentXML = (templateDirectory, componentDirectory, elementName, group) => {
-    const contentFile = fs.readFileSync(`${templateDirectory}/.content.xml`, 'utf8');
     const componentContentFile = fs.readFileSync(`${templateDirectory}/component/v1/component/.content.xml`, 'utf8');
-    fs.writeFileSync(`${componentDirectory}/.content.xml`, contentFile);
     fs.writeFileSync(`${componentDirectory}/.content.xml`,
         format(componentContentFile
             .replace(/\{title\}/g, UpperCase(elementName))
@@ -167,7 +170,7 @@ const generateCQDialogContentFile = (templateDirectory, componentDirectory, elem
                         checked="${attr.default}"
                         fieldLabel="${UpperCase(attr.name)}"
                         name="./${attr.name.replace(/-/g, '_')}"/>`;
-                    } else {
+                    } else { // treat attr as a string
                         return `<${attr.name}
                         jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"

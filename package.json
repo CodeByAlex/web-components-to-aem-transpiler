@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "start": "node index.js custom-elements.json"
   },
@@ -10,9 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "inquirer": "^6.5.0",
-    "mkdirp": "^0.5.1"
-  },
-  "devDependencies": {
+    "mkdirp": "^0.5.1",
     "xml-formatter": "^2.6.1"
   }
 }
