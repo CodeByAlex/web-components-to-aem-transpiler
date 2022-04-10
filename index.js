@@ -55,7 +55,7 @@ inquirer.prompt({
     type: 'list',
     name: 'elementName',
     message: 'Choose a custom element to transpile to an AEM component:',
-    choices: ['All',...elementClassDefs]
+    choices: ['All', ...elementClassDefs]
 }).then(async ({ elementName }) => {
     inquirer.prompt(questionSetThree).then(async ({ group, versioned, projectName }) => {
         if (!customElementsConfig || !customElementsConfig.modules) {
@@ -63,7 +63,7 @@ inquirer.prompt({
         } else {
             try {
                 const elements = elementName === 'All' ? elementClassDefs : [elementName];
-                for(const element of elements) {
+                for (const element of elements) {
                     console.log(`Creating ${element} AEM Component.`);
                     const rootDirectory = getRootComponentDirPath(projectName, element);
                     mkdirp.sync(rootDirectory);
@@ -71,18 +71,18 @@ inquirer.prompt({
                     fs.writeFileSync(`${rootDirectory}/.content.xml`, contentFile);
                     let componentDirectory = `${rootDirectory}/${element}`;
                     mkdirp.sync(componentDirectory);
-    
+
                     if (versioned) {
                         fs.writeFileSync(`${componentDirectory}/.content.xml`, versionedComponentContentFile);
                         mkdirp.sync(`${componentDirectory}/v1`);
                         fs.writeFileSync(`${componentDirectory}/v1/.content.xml`,
                             versionedContentFile.replace(/\{component\}/g, element)
                         );
-    
+
                         componentDirectory = `${rootDirectory}/${element}/v1/${element}`;
                         mkdirp.sync(componentDirectory);
                     }
-    
+
                     const customElementObject = getCustomElementObject(customElementsConfig, element);
                     generateComponentContentXML(templateDirectory, componentDirectory, element, group);
                     generateComponentHTMLFile(templateDirectory, componentDirectory, element, customElementObject);
@@ -95,7 +95,7 @@ inquirer.prompt({
     });
 });
 
-const UpperCase = c => c.charAt(0).toUpperCase() + c.slice(1);
+const getTitle = (c) => (c.charAt(0).toUpperCase() + c.slice(1)).split(/(?=[A-Z])/).join(' ');
 
 const getCustomElementObject = (customElementsConfig, className) => {
     for (const obj of customElementsConfig.modules) {
@@ -125,7 +125,7 @@ const generateComponentContentXML = (templateDirectory, componentDirectory, elem
     const componentContentFile = fs.readFileSync(`${templateDirectory}/component/v1/component/.content.xml`, 'utf8');
     fs.writeFileSync(`${componentDirectory}/.content.xml`,
         format(componentContentFile
-            .replace(/\{title\}/g, UpperCase(elementName))
+            .replace(/\{title\}/g, getTitle(elementName))
             .replace(/\{group\}/g, group)));
 }
 
@@ -136,7 +136,7 @@ const generateComponentHTMLFile = (templateDirectory, componentDirectory, elemen
 
     fs.writeFileSync(`${componentDirectory}/${elementName}.html`,
         format(componentHtmlFile
-            .replace(/\{tag\}/g, elementName)
+            .replace(/\{tag\}/g, elementObj.tagName)
             .replace(/\{attributes\}/g, attributes.map(attr => {
                 if (!isAttributeTypeFunction(attr)) return `${attr.name}="\$\{properties.${attr.name.replace(/-/g, '_')}\}"`
             }).join(` `))
@@ -144,8 +144,8 @@ const generateComponentHTMLFile = (templateDirectory, componentDirectory, elemen
             .replace(/\{comment\}/g, () => {
                 if (attributes.filter(attr => isAttributeTypeFunction(attr)).length > 0) {
                     return `<!-- The following attributes are functions and should be added manually:${attributes.map(attr => {
-                            if (isAttributeTypeFunction(attr)) return `\n${attr.name}:${attr.description}`;
-                        }).join(``)} -->`
+                        if (isAttributeTypeFunction(attr)) return `\n${attr.name}:${attr.description}`;
+                    }).join(``)} -->`
                 }
                 return '';
             }))
@@ -159,22 +159,57 @@ const generateCQDialogContentFile = (templateDirectory, componentDirectory, elem
     fs.writeFileSync(
         `${componentDirectory}/_cq_dialog/.content.xml`,
         format(componentContentDialogFile
-            .replace(/\{title\}/g, UpperCase(elementName))
+            .replace(/\{title\}/g, getTitle(elementName))
             .replace(/\{attributes\}/g, attributes.map(attr => {
                 if (!isAttributeTypeFunction(attr)) {
                     console.log(attr)
-                    if (attr.type.text === 'boolean') {
+                    if (attr.type.text.toLowerCase() === 'boolean') {
                         return `<${attr.name}
                         jcr:primaryType="nt:unstructured"
-                        sling:resourceType="/libs/granite/ui/components/coral/foundation/form/checkbox"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/checkbox"
                         checked="${attr.default}"
-                        fieldLabel="${UpperCase(attr.name)}"
+                        fieldLabel="${getTitle(attr.name)}"
                         name="./${attr.name.replace(/-/g, '_')}"/>`;
-                    } else { // treat attr as a string
+                    } else if (attr.type.text.toLowerCase() === 'number') {
+                        return `<${attr.name}
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/numberfield"
+                        value="${attr.default}"
+                        fieldLabel="${getTitle(attr.name)}"
+                        name="./${attr.name.replace(/-/g, '_')}"/>`;
+                    } else if (attr.type.text.toLowerCase() === 'array' || attr.type.text.indexOf('[]') > -1) {
+                        return `
+                        <${attr.name}
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                            composite="{Boolean}true"
+                            fieldLabel="${getTitle(attr.name)}">
+                            <field
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container"
+                                name="./multifield">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <column
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/container">
+                                        <items jcr:primaryType="nt:unstructured">
+                                            <item
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                fieldLabel="Item"
+                                                name="./item"/>
+                                        </items>
+                                    </column>
+                                </items>
+                            </field>
+                        </${attr.name}>`;
+                    }
+                    else { // treat attr as a string
                         return `<${attr.name}
                         jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                        fieldLabel="${UpperCase(attr.name)}"
+                        value="${attr.default}"
+                        fieldLabel="${getTitle(attr.name)}"
                         name="./${attr.name.replace(/-/g, '_')}"/>`;
                     }
                 }

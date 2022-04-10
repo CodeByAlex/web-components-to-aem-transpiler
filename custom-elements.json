@@ -36,33 +36,53 @@
         {
           "kind": "class",
           "description": "",
-          "name": "Button",
+          "name": "Example",
           "slots": [
             {
-              "description": "The default, and only slot for this button element",
+              "description": "The default, and only slot for this element",
               "name": ""
             }
           ],
           "members": [
             {
               "kind": "field",
-              "name": "variant",
+              "name": "arrayTest",
               "type": {
-                "text": "ButtonVariant"
+                "text": "String []"
               },
-              "default": "'primary'",
-              "description": "Button variant type that influences the button's style",
-              "attribute": "variant"
+              "default": "[]",
+              "description": "Test comment for array",
+              "attribute": "arrayTest"
             },
             {
               "kind": "field",
-              "name": "link",
+              "name": "booleanTest",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Test comment for boolean",
+              "attribute": "booleanTest"
+            },
+            {
+              "kind": "field",
+              "name": "numberTest",
+              "type": {
+                "text": "Number"
+              },
+              "default": "5",
+              "description": "Test comment for number",
+              "attribute": "numberTest"
+            },
+            {
+              "kind": "field",
+              "name": "stringTest",
               "type": {
                 "text": "String"
               },
-              "default": "''",
-              "description": "Button variant type that influences the button's style",
-              "attribute": "link"
+              "default": "'default text'",
+              "description": "Test comment for String",
+              "attribute": "stringTest"
             },
             {
               "kind": "field",
@@ -72,34 +92,44 @@
               },
               "description": "A click handler to be passed only to onClick. DO NOT USE @click on this component",
               "attribute": "onClick"
-            },
-            {
-              "kind": "field",
-              "name": "getButtonHTML"
-            },
-            {
-              "kind": "field",
-              "name": "getATagHTML"
             }
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "arrayTest",
               "type": {
-                "text": "ButtonVariant"
+                "text": "String []"
               },
-              "default": "'primary'",
-              "description": "Button variant type that influences the button's style",
-              "fieldName": "variant"
+              "default": "[]",
+              "description": "Test comment for array",
+              "fieldName": "arrayTest"
             },
             {
-              "name": "link",
+              "name": "booleanTest",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Test comment for boolean",
+              "fieldName": "booleanTest"
+            },
+            {
+              "name": "numberTest",
+              "type": {
+                "text": "Number"
+              },
+              "default": "5",
+              "description": "Test comment for number",
+              "fieldName": "numberTest"
+            },
+            {
+              "name": "stringTest",
               "type": {
                 "text": "String"
               },
-              "default": "''",
-              "description": "Button variant type that influences the button's style",
-              "fieldName": "link"
+              "default": "'default text'",
+              "description": "Test comment for String",
+              "fieldName": "stringTest"
             },
             {
               "name": "onClick",
@@ -114,24 +144,24 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "example-button",
+          "tagName": "example-wc",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "Button",
+          "name": "Example",
           "declaration": {
-            "name": "Button",
+            "name": "Example",
             "module": "src/button/button.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "example-button",
+          "name": "example-wc",
           "declaration": {
-            "name": "Button",
+            "name": "Example",
             "module": "src/button/button.ts"
           }
         }
