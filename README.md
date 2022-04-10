@@ -1,8 +1,8 @@
-# Custom Elements to AEM Component Transpiler
+# Web Components to AEM Component Transpiler
 
 To start using this project:
 
-Generate your custom elements manifest using <b>@custom-elements-manifest/analyzer</b> to analyse your web components project. 
+Generate your custom elements manifest using <b>@custom-elements-manifest/analyzer</b>. To make the most of this CLI, make sure to use JSDocs: https://custom-elements-manifest.open-wc.org/analyzer/getting-started/#supported-jsdoc
 
 Then run:
 ```
