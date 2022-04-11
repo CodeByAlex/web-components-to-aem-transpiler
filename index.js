@@ -208,7 +208,7 @@ const generateCQDialogContentFile = (templateDirectory, componentDirectory, elem
                         return `<${attr.name}
                         jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                        value="${attr.default}"
+                        ${attr.default && attr.default !== "''" && attr.default !== '""' ? `value="${attr.default}"` : ''}
                         fieldLabel="${getTitle(attr.name)}"
                         name="./${attr.name.replace(/-/g, '_')}"/>`;
                     }
