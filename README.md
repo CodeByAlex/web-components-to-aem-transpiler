@@ -1,4 +1,4 @@
-# Web Components to AEM Component Transpiler
+# Web Component to AEM Component Transpiler
 
 ## Getting Started
 To start using this project:
